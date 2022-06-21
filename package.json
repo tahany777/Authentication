@@ -1,0 +1,26 @@
+{
+  "name": "authentication",
+  "version": "1.0.0",
+  "description": "| Authentication     | Authorization | | ----------- | ----------- | | Determines whether users are who they claim to be     | Determines what users can and cannot access       | | Challenges the user to validate credentials (for example, through passwords, answers to security questions, or facial recognition)  | Verifies whether access is allowed through policies and rules        | | Usually done before authorization\t   | Usually done after successful authentication        | | Employees in a company are required to authenticate through the network before accessing their company email  | After an employee successfully authenticates, the system determines what information the employees are allowed to access        |",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tahany777/Authentication.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tahany777/Authentication/issues"
+  },
+  "homepage": "https://github.com/tahany777/Authentication#readme",
+  "dependencies": {
+    "base-64": "^1.0.0",
+    "bcrypt": "^5.0.1",
+    "nodemon": "^2.0.16"
+  }
+}
