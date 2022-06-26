@@ -8,4 +8,6 @@ psql
 CREATE DATABASE auth
 \l
 \c auth
+
+createdb whoami
 ```
