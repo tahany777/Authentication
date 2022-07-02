@@ -13,6 +13,9 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const sequelize = new Sequelize(DATABASE_URL, {});
 
 const Users = require('./models/user.model')(sequelize, DataTypes);
+//OR
+// const Users = require('./models/user.model.js');
+// const UserModel = Users(sequelize, DataTypes);
 
 
 const PORT = process.env.PORT;
