@@ -1,6 +1,8 @@
 'use strict';
-
+require('dotenv').config();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.SECRET;
 
 const UserModel = (sequelize, DataTypes) => {
     const Users = sequelize.define('user', {
@@ -12,6 +14,9 @@ const UserModel = (sequelize, DataTypes) => {
         password: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        token: {
+            type: DataTypes.VIRTUAL
         }
     })
     Users.authorizateBasic = async function (username, password) {
@@ -20,6 +25,8 @@ const UserModel = (sequelize, DataTypes) => {
             const valid = await bcrypt.compare(password, user.password);
             if(valid) {
                 //generate a new token
+                let newToken = jwt.sign({username: user.username}, SECRET);
+                user.token = newToken;
                 return user;
             } else {
                 console.log('The user is not valid');
@@ -29,6 +36,15 @@ const UserModel = (sequelize, DataTypes) => {
         } catch(error){
             console.log('error', error);
         }
+    }
+    Users.validateToken = async function (token) {
+        const verifyToken = jwt.verify(token, SECRET);
+        console.log('verifyToken =>', verifyToken);
+        const user = await this.findOne({where:{username: verifyToken.username}});
+        if(user){
+            return user;
+        }
+        throw new Error('invalid token');
     }
     return Users;
 }

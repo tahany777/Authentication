@@ -13,6 +13,7 @@ const DATABASE_URL = process.env.DATABASE_URL;
 const sequelize = new Sequelize(DATABASE_URL, {});
 
 const basicAuth = require('./middlewares/basicAuth.js');
+const bearerAuth = require('./middlewares/bearerAuth');
 // const Users = require('./models/user.model')(sequelize, DataTypes);
 //OR
 const Users = require('./models/user.model.js');
@@ -24,6 +25,7 @@ const PORT = process.env.PORT;
 app.post('/signup', signUp);
 // app.post('/signin', signin);
 app.post('/signin',basicAuth(UserModel), signin);
+app.get('/user', bearerAuth(UserModel), userHandler);
 
 //localhost:3000/signup >> body{username: 'tahany', password: '12345'}
 async function signUp(req, res){
@@ -38,10 +40,13 @@ async function signUp(req, res){
     res.status(201).json(newUser)
 }
 //localhost:3000/signin >> Authorization >> 'Basic encoded(username:password)'
-async function signin(req, res){
+function signin(req, res){
     res.status(200).json(req.user);
 }
-
+function userHandler(req, res){
+    //send user information to the client & do what the request required
+    res.status(200).json(req.user);
+}
 sequelize.sync().then(() => {
     app.listen(PORT, () => {
         console.log(`server now is running ${PORT}`)

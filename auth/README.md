@@ -15,3 +15,6 @@ CREATE DATABASE auth;
 \c auth
 \dt;
 ```
+JWT => JSON Web Token
+
+``npm i jsonwebtoken``
