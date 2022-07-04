@@ -7,7 +7,7 @@ module.exports = (UserModel) => async (req, res, next) => {
         console.log('bearerHeaderParts >>>', bearerHeaderParts); // ['Bearer', 'token']
         let token = bearerHeaderParts.pop();
         console.log('Token >>>', token);
-        UserModel.validateToken(token).then(user => {
+        UserModel.authorizateBearer(token).then(user => {
             req.user = user;
             next();
         }).catch(error => next(`invalid user ${error}`))

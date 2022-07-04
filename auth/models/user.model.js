@@ -1,25 +1,25 @@
 'use strict';
 require('dotenv').config();
+const {sequelize, DataTypes} = require('./index.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const SECRET = process.env.SECRET;
+const SECRET = process.env.SECRET || 'some secret word';
 
-const UserModel = (sequelize, DataTypes) => {
-    const Users = sequelize.define('user', {
-        username: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            // unique: true
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        token: {
-            type: DataTypes.VIRTUAL
-        }
-    })
-    Users.authorizateBasic = async function (username, password) {
+const Users = sequelize.define('user', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        // unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    token: {
+        type: DataTypes.VIRTUAL
+    }
+});
+Users.authorizateBasic = async function (username, password) {
         try {
             const user = await this.findOne({where: {username: username}});
             const valid = await bcrypt.compare(password, user.password);
@@ -36,8 +36,8 @@ const UserModel = (sequelize, DataTypes) => {
         } catch(error){
             console.log('error', error);
         }
-    }
-    Users.validateToken = async function (token) {
+}
+Users.authorizateBearer = async function (token) {
         const verifyToken = jwt.verify(token, SECRET);
         console.log('verifyToken =>', verifyToken);
         const user = await this.findOne({where:{username: verifyToken.username}});
@@ -45,27 +45,9 @@ const UserModel = (sequelize, DataTypes) => {
             return user;
         }
         throw new Error('invalid token');
-    }
-    return Users;
 }
-module.exports = UserModel;
+module.exports = Users;
 
-//or
-
-// const Users = (sequelize, DataTypes) => sequelize.define('user', {
-//     username: {
-//         type: DataTypes.STRING,
-//         allowNull: false,
-//         // unique: true
-//     },
-//     password: {
-//         type: DataTypes.STRING,
-//         allowNull: false
-//     }
-    
-// })
-
-// module.exports = Users
 
 
 
